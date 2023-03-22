@@ -1,29 +1,40 @@
-import { Formik } from 'formik';
-import { IconContext } from 'react-icons';
-import { BsSearch } from 'react-icons/bs';
-import { Input, SearchbarStyled, SearchForm } from './Searchbar.styled';
+import { Component } from 'react';
+import { SearchbarStyled } from './Searchbar.styled';
+import { AiOutlineSearch } from 'react-icons/ai';
 
-const Searchbar = ({ onSubmit }) => {
-  return (
-    <SearchbarStyled>
-      <Formik initialValues={{ name: '' }} onSubmit={onSubmit}>
-        <SearchForm>
-          <IconContext.Provider value={{ size: '1.5em' }}>
-            <button type="submit" className="button">
-              <BsSearch />
-              <span className="button-label">Search</span>
-            </button>
-          </IconContext.Provider>
-          <Input
+class Searchbar extends Component {
+  state = {
+    query: '',
+  };
+
+  handleChange = e => {
+    this.setState({ query: e.target.value });
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.onSubmit(this.state.query);
+  };
+
+  render() {
+    return (
+      <SearchbarStyled>
+        <form onSubmit={this.handleSubmit}>
+          <button type="submit">
+            <AiOutlineSearch size="25px" color="black" />
+          </button>
+
+          <input
             type="text"
-            name="name"
             autoComplete="off"
             autoFocus
             placeholder="Search images and photos"
+            onChange={this.handleChange}
           />
-        </SearchForm>
-      </Formik>
-    </SearchbarStyled>
-  );
-};
+        </form>
+      </SearchbarStyled>
+    );
+  }
+}
+
 export default Searchbar;
