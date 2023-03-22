@@ -1,15 +1,23 @@
-import Button from './Button';
+import { Component } from 'react';
 import ImageGallery from './ImageGallery';
-import Loader from './Loader';
 import Searchbar from './Searchbar';
 
-export const App = () => {
-  return (
-    <>
-      <Searchbar />
-      <ImageGallery />
-      <Button />
-      <Loader />
-    </>
-  );
-};
+export class App extends Component {
+  state = {
+    searchText: '',
+  };
+
+  handleSubmit = ({ name }, { resetForm }) => {
+    this.setState({ searchText: name });
+    resetForm();
+  };
+
+  render() {
+    return (
+      <div className="App">
+        <Searchbar onSubmit={this.handleSubmit} />
+        <ImageGallery searchText={this.state.searchText} />
+      </div>
+    );
+  }
+}

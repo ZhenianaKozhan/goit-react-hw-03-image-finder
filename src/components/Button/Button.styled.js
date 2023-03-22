@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const BtnLoadMore = styled.button`
+  width: max-content;
   padding: 8px 16px;
   border-radius: 2px;
   background-color: #3f51b5;
