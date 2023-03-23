@@ -24,6 +24,9 @@ class App extends Component {
   };
 
   componentDidUpdate(_, prevState) {
+    if (this.state.query.trim() === '') {
+      Notify.failure('Please fill out the form');
+    }
     if (prevState.query !== this.state.query) {
       try {
         getImages(this.state.query, 1).then(res => {
@@ -64,9 +67,9 @@ class App extends Component {
       this.setState({ status: STATUS.PENDING });
       getImages(this.state.query, page)
         .then(res =>
-          this.setState({
-            images: [...this.state.images, ...res.data.hits],
-          })
+          this.setState(({ images }) => ({
+            images: [...images, ...res.data.hits],
+          }))
         )
         .then(this.changeStatus(STATUS.RESOLVED));
     } catch (error) {
@@ -86,13 +89,15 @@ class App extends Component {
     return (
       <Container>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {status === STATUS.RESOLVED && <ImageGallery images={images} />}
+        {status === STATUS.RESOLVED && images.length > 0 && (
+          <ImageGallery images={images} />
+        )}
 
         {status === STATUS.RESOLVED && totalHits > images.length && (
           <LoadMoreBtn page={this.loadMoreImages} />
         )}
 
-        {status === STATUS.PENDING && <Loader />}
+        {status === STATUS.PENDING && images.length > 0 && <Loader />}
 
         {totalHits === images.length &&
           totalHits !== 0 &&
